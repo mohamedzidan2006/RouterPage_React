@@ -1,10 +1,12 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 export default function Insta() {
   const [balance, setBalance] = useState(0);
   const amountInput = useRef();
-  const [transaction, setTransaction] = useState([
-
-  ]);
+  const [transaction, setTransaction] = useState([]);
+  useEffect(()=>{
+    setBalance(+localStorage.getItem('balance'));
+    setTransaction(JSON.parse(localStorage.getItem('transaction')) || []);
+  },[]);
   const deposit = () => {
     let amount = +amountInput.current.value;
     setBalance(balance + amount);
@@ -18,6 +20,8 @@ export default function Insta() {
     let copy = [...transaction];
     copy.push(newTransaction);
     setTransaction(copy);
+    localStorage.setItem('balance',balance+amount);
+    localStorage.setItem('transaction',JSON.stringify(copy));
   };
   const withdrow = () => {
     let amount = +amountInput.current.value;
@@ -32,6 +36,8 @@ export default function Insta() {
     copy.push(newTransaction);
     setTransaction(copy);
       setBalance(balance - amount);
+       localStorage.setItem('balance',balance-amount);
+    localStorage.setItem('transaction',JSON.stringify(copy));
     }
     else {
       alert('your balance is empty');
